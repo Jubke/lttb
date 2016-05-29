@@ -31,10 +31,15 @@ Data passed should be in the format [[x1,y1],[x2,y2]].
   # => [1, 1], [3, 9], [5, 25]]
 ```
 
-Pass an `:dates => true` to process DateTime objects correctly.
+Pass `:dates => true` to process DateTime objects correctly.
 ```ruby
   Lttb.process(data, threshold, dates: true)
 ```
+
+## Known limitations
+
+Does not support gaps (null values) in the data array.
+X-values must be in a strictly increasing order.
 
 ## Contributing
 
