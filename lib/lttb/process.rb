@@ -40,11 +40,13 @@ module Lttb
     sampled_index = 1 # Now we start at index 1
 
     i = 0
+    # initializing first buckets
+    bucket_start = (((i + 0) * every).floor + 1).to_i
+    bucket_mid = (((i + 1) * every).floor + 1).to_i
+
     while i < threshold - 2
-      # Calculate bucket points
-      bucket_start = (((i + 0) * every).floor + 1).to_i
-      bucket_mid = (((i + 1) * every).ceil).to_i
-      bucket_end = (((i + 2) * every).ceil).to_i
+      # Calculate new bucket end
+      bucket_end = (((i + 2) * every).floor + 1).to_i
 
       # Calculate point average for next bucket (containing c)
       avg_x = 0
@@ -89,13 +91,17 @@ module Lttb
         range_offs += 1 # increment
       end
 
+      # move the bucket by one step (every)
+      bucket_start = bucket_mid
+      bucket_mid = bucket_end
+
       sampled[sampled_index] = max_area_point # Pick this point from the bucket
       sampled_index += 1
       a = next_a # This a is the next a (chosen b)
       i += 1 # increase count
     end
 
-    sampled.push(data[data.size - 1]) # Always add last
+    sampled[sampled_index] = data[data.size - 1] # Always add last
 
     sampled = as_dates(sampled) if options[:dates]
     sampled
