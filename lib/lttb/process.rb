@@ -30,16 +30,27 @@ module Lttb
     every = (data_length - 2) / (threshold - 2)
 
     a = 0 # Initially a is the first point in the triangle
-    sampled = [data[a]] # Always add the first point
+    next_a = 0
+    max_area_point = nil
+    max_area = 0
+    area = 0
 
-    (0..(threshold - 3)).each do |i|
+    sampled = []
+    sampled[0] = data[a] # Always add the first point
+    sampled_index = 1 # Now we start at index 1
+
+    i = 0
+    while i < threshold - 2
+      # Calculate bucket points
+      bucket_start = (((i + 0) * every).floor + 1).to_i
+      bucket_mid = (((i + 1) * every).ceil).to_i
+      bucket_end = (((i + 2) * every).ceil).to_i
+
       # Calculate point average for next bucket (containing c)
       avg_x = 0
       avg_y = 0
-      avg_range_start = (((i + 1) * every).floor + 1).to_i
-      avg_range_end = (((i + 2) * every).floor + 1).to_i
-      avg_range_end = avg_range_end < data_length ? avg_range_end : data_length
-
+      avg_range_start = bucket_mid
+      avg_range_end = bucket_end < data_length ? bucket_end : data_length
       avg_range_length = avg_range_end - avg_range_start
 
       while avg_range_start < avg_range_end
@@ -53,9 +64,8 @@ module Lttb
       avg_y /= avg_range_length
 
       # Get the range for this bucket
-      range_offs = (((i + 0) * every).floor + 1).to_i
-      range_to = (((i + 1) * every).floor + 1).to_i
-      range_to = range_to < data_length - 1 ? range_to : data_length - 1
+      range_offs = bucket_start
+      range_to = bucket_mid
 
       # Point a
       point_ax = data[a][0]
@@ -79,8 +89,10 @@ module Lttb
         range_offs += 1 # increment
       end
 
-      sampled.push(max_area_point) # Pick this point from the bucket
+      sampled[sampled_index] = max_area_point # Pick this point from the bucket
+      sampled_index += 1
       a = next_a # This a is the next a (chosen b)
+      i += 1 # increase count
     end
 
     sampled.push(data[data.size - 1]) # Always add last

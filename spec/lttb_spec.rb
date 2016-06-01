@@ -15,4 +15,9 @@ describe Lttb do
   it 'works with DateTime objects' do
     expect(Lttb.process(datetime_data, 10, dates: true).size).to eq(10)
   end
+
+  it 'does not change DateTime objects' do
+    d = datetime_data
+    expect(Lttb.process(d, 10, dates: true)[0][0]).to eq(d[0][0])
+  end
 end
