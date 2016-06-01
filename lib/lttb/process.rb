@@ -27,7 +27,7 @@ module Lttb
     return data if threshold >= data_length || threshold == 0
 
     # Bucket size. Leave room for start and end data points
-    every = (data_length - 2) / (threshold - 2)
+    every = (data_length - 2).fdiv(threshold - 2)
 
     a = 0 # Initially a is the first point in the triangle
     next_a = 0
@@ -62,8 +62,8 @@ module Lttb
         avg_range_start += 1 # increment
       end
 
-      avg_x /= avg_range_length
-      avg_y /= avg_range_length
+      avg_x = avg_x.fdiv avg_range_length
+      avg_y = avg_y.fdiv avg_range_length
 
       # Get the range for this bucket
       range_offs = bucket_start
