@@ -131,7 +131,7 @@ module Lttb
 
     def handle_dates(data)
       data.map do |d|
-        d[0] = d[0].strftime('%Q').to_i
+        d[0] = d[0].to_datetime.strftime('%Q').to_i
         d
       end
     end
